@@ -34,14 +34,14 @@ class ETL:
         with open("{}_label.pckl".format(self.output_path_base), "wb") as f:
             pickle.dump(label, f)
         with open("{}_data.pckl".format(self.output_path_base), "wb") as f:
-            pickle.dump(label, f)
+            pickle.dump(data, f)
 
 
 def get_data_and_label(file_path_base: str):
-    with open("{}_label.pckl".format(file_path_base), "w") as g:
-        labels = pickle.load(g)
-    with open("{}_label.pckl".format(file_path_base), "w") as g:
-        data = pickle.load(g)
+    with open("{}_label.pckl".format(file_path_base), "rb") as f:
+        labels = pickle.load(f)
+    with open("{}_data.pckl".format(file_path_base), "rb") as f:
+        data = pickle.load(f)
     return labels, data
 
 

@@ -1,5 +1,6 @@
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing import sequence
+from tensorflow.keras.layers import Dense, Embedding, Conv1D, CuDNNLSTM
 from src.etl import get_data_and_label
 
 
@@ -22,6 +23,17 @@ class DummyModel:
 
     def _train_network(self):
         pass
+
+    def _build_network(self, batch_size: int = 1024, epochs: int = 10):
+        input = Input()
+        x = Embedding()(inp)
+        x = Conv1D()(x)
+        x = CuDNNLSTM()(x)
+        x = Dense()(x)
+        self.model = Model(inputs=inp, output=x)
+        self.model.compile(loss="binary_crossentropy", optimizer="adam")
+
+
 
 
 

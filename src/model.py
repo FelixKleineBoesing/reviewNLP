@@ -6,8 +6,9 @@ from src.etl import get_data_and_label
 
 class DummyModel:
 
-    def __init__(self, number_words: int = 20000):
+    def __init__(self, number_words: int = 20000, sequence_length: int = 100):
         self.number_words = number_words
+        self.sequence_length = sequence_length
 
     def _create_network(self):
         pass

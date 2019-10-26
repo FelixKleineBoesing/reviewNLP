@@ -3,7 +3,7 @@
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing import sequence
-from tensorflow.keras.layers import Dense, Embedding, Conv1D, CuDNNLSTM, Input
+from tensorflow.keras.layers import Dense, Embedding, Conv1D, LSTM, Input
 from tensorflow.keras.models import Model
 
 from src.etl import get_data_and_label
@@ -41,7 +41,7 @@ class DummyModel:
         input = Input(shape=(self.sequence_length, ))
         x = Embedding(self.number_words, self.embedding_size, weights=[matrix])(input)
         x = Conv1D()(x)
-        x = CuDNNLSTM()(x)
+        x = LSTM()(x)
         x = Dense()(x)
         self.model = Model(inputs=input, output=x)
         self.model.compile(loss="binary_crossentropy", optimizer="adam")

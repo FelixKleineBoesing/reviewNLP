@@ -35,7 +35,14 @@ class GloVeEmbeddings:
         self.embedding_mean, self.embedding_std = embeddings_matrix.mean(), embeddings_matrix.std()
         self.embedding_size = embeddings_matrix.shape[1]
         self.number_words = min(len(word_index), number_words)
-        print(embeddings)
+        embedding_matrix = np.random.normal(self.embedding_mean, self.embedding_std, size=(self.number_words,
+                                                                                           self.embedding_size))
+        for word, i in word_index.items():
+            if i >= self.number_words:
+                continue
+            embedding_vector = embeddings.get(word)
+            if embedding_vector is not None:
+                embedding_matrix[i] = embedding_vector
 
 
 

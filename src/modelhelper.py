@@ -23,6 +23,7 @@ class GloVeEmbeddings:
         self.embedding_std = None
         self.embedding_size = None
         self.number_words = None
+        self.embedding_matrix = None
 
     def prepare_embedding_file(self, word_index, number_words: int = 20000):
         def convert_to_array(row):
@@ -43,8 +44,7 @@ class GloVeEmbeddings:
             embedding_vector = embeddings.get(word)
             if embedding_vector is not None:
                 embedding_matrix[i] = embedding_vector
-
-
+        self.embedding_matrix = embedding_matrix
 
 
 if __name__ == "__main__":

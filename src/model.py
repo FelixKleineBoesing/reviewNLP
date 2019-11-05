@@ -1,4 +1,4 @@
-
+import logging
 
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -14,13 +14,14 @@ from src.modelhelper import Dimension
 class DummyModel:
 
     def __init__(self, number_words: int = 20000, dimension: Dimension = Dimension.d100,
-                 batch_size: int = 1024, epochs: int = 10):
+                 batch_size: int = 1024, epochs: int = 10, weights_file_path: str = "../data/weights/weights.hdf5"):
         self.number_words = number_words
         self.sequence_length = dimension.value
         self.embedding_size = dimension.value
         self.embeddings = None
         self.batch_size = batch_size
         self.epochs = epochs
+        self.weights_file_path = weights_file_path
 
     def _create_network(self):
         pass
@@ -42,18 +43,22 @@ class DummyModel:
         return data
 
     def _train_network(self, data, label):
-        self.model.fit(data, label, batch_size = self.batch_size, epochs=self.epochs)
+        self.model.fit(data, label, batch_size=self.batch_size, epochs=self.epochs)
+        self.model.save_weights(self.weights_file_path)
 
     def _build_network(self):
-        input = Input(shape=(self.sequence_length, ))
+        input_ = Input(shape=(self.sequence_length, ))
         x = Embedding(self.number_words, self.embedding_size, weights=[self.embeddings.embedding_matrix])(input)
-        x = Conv1D()(x)
-        x = LSTM()(x)
-        x = Dense()(x)
-        self.model = Model(inputs=input, output=x)
-        self.model.compile(loss="binary_crossentropy", optimizer="adam")
-
-
+        x = Conv1D(self.embedding_size, kernel_size=3)(x)
+        x = Conv1D(128, strides=1, kernel_size=3)(x)
+        x = Conv1D(128, strides=1, kernel_size=3)(x)
+        x = Conv1D(256, strides=1, kernel_size=3)(x)
+        x = LSTM(256, activation="relu")(x)
+        x = Dense(128, activation="relu")(x)
+        x = Dense(1, activation="sigmoid")(x)
+        self.model = Model(inputs=input_, output=x)
+        self.model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["binary_accuracy"])
+        logging.debug(self.model.summary())
 
 
 if __name__ == "__main__":

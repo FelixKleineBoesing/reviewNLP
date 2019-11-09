@@ -1,5 +1,6 @@
 from enum import Enum
 import numpy as np
+import pickle
 
 
 class Dimension(Enum):
@@ -45,6 +46,15 @@ class GloVeEmbeddings:
             if embedding_vector is not None:
                 embedding_matrix[i] = embedding_vector
         self.embedding_matrix = embedding_matrix
+
+    def to_file(self, path: str):
+        with open(path, "wb") as f:
+            pickle.dump(self, f)
+
+    @classmethod
+    def from_file(cls, path: str):
+        with open(path, "rb") as f:
+            return pickle.load(f)
 
 
 if __name__ == "__main__":
